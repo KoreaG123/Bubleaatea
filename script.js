@@ -668,4 +668,13 @@ window.addEventListener('error', (e) => {
     // Aquí puedes agregar logging a un servicio externo
 });
 
+const video = document.getElementById("mainVideo");
+const playBtn = document.getElementById("playButton");
+const overlay = document.querySelector(".video-overlay");
+
+playBtn.addEventListener("click", () => {
+    video.play();
+    overlay.style.display = "none";
+});
+
 
