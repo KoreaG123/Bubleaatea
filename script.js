@@ -1,4 +1,3 @@
-
 // ========================================
 // VARIABLES GLOBALES
 // ========================================
@@ -106,31 +105,109 @@ productoCards.forEach(card => {
 // VIDEO PLAYER
 // ========================================
 
-if (videoOverlay && playBtn && video) {
-    // Reproducir video al hacer clic
-    playBtn.addEventListener('click', () => {
-        video.play();
-        videoOverlay.style.opacity = '0';
+const videoWrapper = document.querySelector('.video-wrapper');
+const videoElement = document.getElementById('mainVideo');
+const videoOverlayElement = document.querySelector('.video-overlay');
+const playButton = document.getElementById('playButton');
+
+if (videoWrapper && videoElement && videoOverlayElement && playButton) {
+    
+    // Función para reproducir el video
+    function playVideo() {
+        videoElement.play();
+        videoOverlayElement.style.opacity = '0';
         setTimeout(() => {
-            videoOverlay.style.display = 'none';
+            videoOverlayElement.style.display = 'none';
         }, 300);
+    }
+    
+    // Función para pausar el video
+    function pauseVideo() {
+        videoElement.pause();
+    }
+    
+    // Función para mostrar overlay
+    function showOverlay() {
+        videoOverlayElement.style.display = 'flex';
+        setTimeout(() => {
+            videoOverlayElement.style.opacity = '1';
+        }, 10);
+    }
+    
+    // Click en botón de play
+    playButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playVideo();
+    });
+    
+    // Click en overlay
+    videoOverlayElement.addEventListener('click', (e) => {
+        if (e.target === videoOverlayElement) {
+            playVideo();
+        }
+    });
+    
+    // Click en el video para pausar/reproducir
+    videoElement.addEventListener('click', () => {
+        if (videoElement.paused) {
+            playVideo();
+        } else {
+            pauseVideo();
+        }
     });
     
     // Mostrar overlay cuando el video termina
-    video.addEventListener('ended', () => {
-        videoOverlay.style.display = 'flex';
-        setTimeout(() => {
-            videoOverlay.style.opacity = '1';
-        }, 10);
+    videoElement.addEventListener('ended', () => {
+        showOverlay();
     });
     
-    // Pausar video al hacer clic en él
-    video.addEventListener('click', () => {
-        if (video.paused) {
-            video.play();
-        } else {
-            video.pause();
+    // Mostrar overlay cuando el video se pausa
+    videoElement.addEventListener('pause', () => {
+        if (videoElement.currentTime < videoElement.duration - 0.5) {
+            showOverlay();
         }
+    });
+    
+    // Ocultar overlay cuando el video se reproduce
+    videoElement.addEventListener('play', () => {
+        videoOverlayElement.style.opacity = '0';
+        setTimeout(() => {
+            videoOverlayElement.style.display = 'none';
+        }, 300);
+    });
+    
+    // Verificar si el video puede reproducirse
+    videoElement.addEventListener('loadedmetadata', () => {
+        console.log('Video cargado correctamente');
+        console.log('Duración:', videoElement.duration);
+    });
+    
+    // Manejar errores de carga
+    videoElement.addEventListener('error', (e) => {
+        console.error('Error al cargar el video:', e);
+        console.error('Código de error:', videoElement.error?.code);
+        console.error('Mensaje:', videoElement.error?.message);
+        
+        // Mostrar mensaje al usuario
+        const errorMessage = document.createElement('div');
+        errorMessage.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+        `;
+        errorMessage.innerHTML = `
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ffc107; margin-bottom: 10px;"></i>
+            <p>No se pudo cargar el video</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Verifica que el archivo existe en: assets/videos/preparacion.mp4</p>
+        `;
+        videoWrapper.appendChild(errorMessage);
     });
 }
 
