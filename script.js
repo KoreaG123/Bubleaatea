@@ -106,22 +106,7 @@ productoCards.forEach(card => {
 // ========================================
 
 const videoWrapper = document.querySelector('.video-wrapper');
-const videoElement = document.getElementById('mainVideo');
-const videoOverlayElement = document.querySelector('.video-overlay');
-const playButton = document.getElementById('playButton');
 
-if (videoElement && videoOverlayElement && playButton) {
-
-    playButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        videoElement.play();
-        videoOverlayElement.style.display = 'none';
-    });
-
-    videoElement.addEventListener('pause', () => {
-        videoOverlayElement.style.display = 'flex';
-    });
-}
 if (videoWrapper && videoElement && videoOverlayElement && playButton) {
     
     // Función para reproducir el video
