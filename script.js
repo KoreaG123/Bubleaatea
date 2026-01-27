@@ -110,6 +110,18 @@ const videoElement = document.getElementById('mainVideo');
 const videoOverlayElement = document.querySelector('.video-overlay');
 const playButton = document.getElementById('playButton');
 
+if (videoElement && videoOverlayElement && playButton) {
+
+    playButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        videoElement.play();
+        videoOverlayElement.style.display = 'none';
+    });
+
+    videoElement.addEventListener('pause', () => {
+        videoOverlayElement.style.display = 'flex';
+    });
+}
 if (videoWrapper && videoElement && videoOverlayElement && playButton) {
     
     // Función para reproducir el video
@@ -671,8 +683,4 @@ window.addEventListener('error', (e) => {
     // Aquí puedes agregar logging a un servicio externo
 });
 
-// ========================================
-// EXPORT (SI SE USA COMO MÓDULO)
-// ========================================
 
-export { showToast, animateCounter, typeWriter, debounce };
